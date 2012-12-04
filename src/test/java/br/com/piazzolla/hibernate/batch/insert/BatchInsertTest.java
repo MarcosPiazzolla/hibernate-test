@@ -34,8 +34,7 @@ public class BatchInsertTest {
   @BeforeClass
   public void init() {
     emFactory = Persistence
-        .createEntityManagerFactory("br.com.piazzolla.hibernate.jpa");// criar
-                                                                      // persisntece.xml
+        .createEntityManagerFactory("br.com.piazzolla.hibernate.jpa");
 
     insert.doInsert(MyEntityFakes.getAll());// recebe uma lista de insertables
   }
