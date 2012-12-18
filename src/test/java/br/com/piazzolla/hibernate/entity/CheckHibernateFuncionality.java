@@ -32,7 +32,7 @@ public class CheckHibernateFuncionality {
     emf.close();
   }
 
-  public void shoud_insert_my_entity_in_db() {
+  public void should_insert_my_entity_in_db() {
     persistSomeEntitiesInDb();
 
     EntityManager em = emf.createEntityManager();
