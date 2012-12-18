@@ -33,7 +33,7 @@ public class CheckHibernateFuncionality {
   }
 
   public void shoud_insert_my_entity_in_db() {
-    persistSomeeEntitiesInDb();
+    persistSomeEntitiesInDb();
 
     EntityManager em = emf.createEntityManager();
     em.getTransaction().begin();
@@ -56,7 +56,7 @@ public class CheckHibernateFuncionality {
     }
   }
 
-  private void persistSomeeEntitiesInDb() {
+  private void persistSomeEntitiesInDb() {
     EntityManager em = emf.createEntityManager();
     em.getTransaction().begin();
 
