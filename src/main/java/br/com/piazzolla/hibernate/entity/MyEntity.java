@@ -1,15 +1,34 @@
 package br.com.piazzolla.hibernate.entity;
 
-public interface MyEntity {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-  interface Builder extends br.com.piazzolla.hibernate.base.Builder<MyEntity> {
+@Entity
+@Table(name = "MY_ENTITY", schema = "HTEST")
+public class MyEntity {
 
-    String getName();
+  @Id
+  @GeneratedValue
+  private int id;
 
+  private String name;
+
+  @SuppressWarnings("unused")
+  private MyEntity() {
   }
 
-  int getId();
+  MyEntity(String name) {
+    this.name = name;
+  }
 
-  String getName();
+  public int getId() {
+    return id;
+  }
+
+  public String getName() {
+    return name;
+  }
 
 }
