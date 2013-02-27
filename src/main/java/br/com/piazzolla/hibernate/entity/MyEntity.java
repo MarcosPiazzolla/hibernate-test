@@ -15,8 +15,7 @@ public class MyEntity {
 
   private String name;
 
-  @SuppressWarnings("unused")
-  private MyEntity() {
+  public MyEntity() {
   }
 
   MyEntity(String name) {
