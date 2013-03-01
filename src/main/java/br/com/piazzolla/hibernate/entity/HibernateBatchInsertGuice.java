@@ -1,5 +1,6 @@
 package br.com.piazzolla.hibernate.entity;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -13,24 +14,40 @@ import com.google.inject.ImplementedBy;
 class HibernateBatchInsertGuice implements HibernateBatchInsert {
 
   private EntityManagerFactory emf;
+  private static final String UNIT = "br.com.piazzolla.persistence";
 
   @Override
   public void of(List<? extends Object> all) {
-    if (count() > 0) {
+    Iterator<? extends Object> iterator = all.iterator();
+    Object obj = iterator.next();
+    Class<? extends Object> realTypeOfList = obj.getClass();
+    String clazzName = realTypeOfList.getSimpleName();
 
+    emf = Persistence.createEntityManagerFactory(UNIT);
+    EntityManager em = emf.createEntityManager();
+
+    if (tableLines(em, clazzName) > 0) {
+      truncateTable(em, clazzName);
     }
+
+    // do batch insert
+
+    // close em, emf...
   }
 
-  private int count() {
-    String persistence = "br.com.piazzolla.persistence";
-    emf = Persistence.createEntityManagerFactory(persistence);
+  private void truncateTable(EntityManager em, String clazzName) {
+    String formattedQuery = String.format("truncate table %s", clazzName);
+    Query truncateQuery = em.createQuery(formattedQuery);
+    truncateQuery.executeUpdate();
 
-    EntityManager em = emf.createEntityManager();
-    Query query = em.createQuery("select count(m) from MyEntity m");
+  }
+
+  private int tableLines(EntityManager em, String clazzName) {
+    String formattedQuery;
+    formattedQuery = String.format("select count(e) from %s e", clazzName);
+
+    Query query = em.createQuery(formattedQuery);
     Number result = (Number) query.getSingleResult();
-
-    em.close();
-    emf.close();
 
     return result.intValue();
   }
