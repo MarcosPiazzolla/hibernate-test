@@ -5,12 +5,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-import com.google.inject.ImplementedBy;
-
-@ImplementedBy(HibernateBatchInsert.class)
 class HibernateBatchInsertGuice implements HibernateBatchInsert {
 
   private EntityManagerFactory emf;
@@ -30,9 +28,26 @@ class HibernateBatchInsertGuice implements HibernateBatchInsert {
       truncateTable(em, clazzName);
     }
 
-    // do batch insert
+    batchInsert(em, all);
 
-    // close em, emf...
+    em.close();
+    emf.close();
+  }
+
+  private void batchInsert(EntityManager em, List<? extends Object> all) {
+    EntityTransaction transaction = em.getTransaction();
+    transaction.begin();
+
+    for (int i = 0; i < all.size(); i++) {
+      em.persist(all.get(i));
+
+      if (i % 20 == 0) {
+        em.flush();
+        em.clear();
+      }
+    }
+
+    transaction.commit();
   }
 
   private void truncateTable(EntityManager em, String clazzName) {

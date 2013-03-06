@@ -12,12 +12,14 @@ import javax.persistence.Persistence;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 
 @Test
+@Guice(modules = { HibernateBatchInsertTestModule.class })
 public class HibernateBatchInsertTest {
 
   @Inject
@@ -47,7 +49,7 @@ public class HibernateBatchInsertTest {
     batchInsert.of(MyEntities.getAll());
 
     List<MyEntity> after;
-    after = em.createQuery("from MyEntiy", MyEntity.class).getResultList();
+    after = em.createQuery("from MyEntity", MyEntity.class).getResultList();
 
     List<String> res = transform(after, new ToMyEntityName());
     assertThat(res.size(), equalTo(3));
